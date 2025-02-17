@@ -1,0 +1,194 @@
+.footer-container {
+  padding: 80px;
+}
+
+/* Footer */
+
+.mb-4 {
+  margin-bottom: 1.5rem !important
+}
+
+.fAddress {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  text-align: left; 
+}
+
+.fAddress > a {
+  display: inline-block;
+}
+
+.fAddress h4 {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 26px;
+  color: #0e0051;
+  margin-bottom: 20px;
+}
+.fAddress ul {
+  margin: 0;
+  padding: 0;
+}
+
+.fAddress ul li {
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.fAddress ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.fAddress ul li span {
+  display: block;
+  width: 30px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.fAddress ul li a {
+  color: #0e0051;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.fLinks {
+  width: 100%;
+  height: auto;
+  text-align: left;
+}
+.fLinks ul {
+  list-style: none; /* Remove default list bullets */
+  padding: 0; /* Remove padding around the list */
+  margin: 0; /* Remove default margins */
+}
+
+.fLinks h4 {
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #0e0051;
+  line-height: 50px;
+}
+
+.fLinks ul li {
+  margin-bottom: 10px;
+}
+
+.fLinks ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.fLinks ul li a {
+  font-size: 14px;
+  color: #0e0051;
+  font-weight: 500;
+  text-decoration: none;
+}
+.copyRight{
+  padding: 30px;
+}
+.copyRight p {
+  color: #0e0051;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.locations {
+  background: #e0eaf5;
+  padding: 30px;
+}
+
+
+.lLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  list-style: none; /* Remove default list bullets */
+}
+
+.lLinks li a {
+  color: #0053f7;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+p {
+  color: #56597b;
+  line-height: 26px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.socialMedia {
+  margin: 0 65% 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns */
+  grid-template-rows: repeat(2, auto); /* Two rows */
+  gap: 15px; /* Reduced gap between icons */
+  justify-items: center;
+  padding: 20px 0;
+}
+
+.socialMedia a {
+  flex: 1 1 45%; /* Each icon will take up roughly half the width, allowing two per row */
+  display: flex;
+  justify-content: center;
+}
+
+.socialMedia img {
+  width: 35px;
+  height: 35px;
+}
+
+.socialMedia a:hover {
+  transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+@media only screen and (max-width: 991px) {
+  .fAddress ul {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 30px;
+  }
+  .fAddress ul li {
+    margin: 0px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .fLinks {
+    margin-top: 30px;
+  }
+  .fLinks h4 {
+    line-height: normal;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .footer {
+    padding: 0px 15px;
+  }
+  .fAddress ul {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .fAddress ul li {
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .socialMedia a {
+    flex: 1 1 100%; /* Stack icons in a single column on small screens */
+  }
+}

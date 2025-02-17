@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.btn-primary {
+  line-height: 45px;
+  white-space: nowrap;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 45px;
+  font-size: 17px;
+  font-weight: 600;
+  border: 0px solid #0d6efd;
+  background: linear-gradient(90deg, rgba(0, 197, 255, 1) 0%, rgba(56, 54, 216, 1) 100%);
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(90deg, rgba(56, 54, 216, 1) 12%, rgba(0, 197, 255, 1) 100%);
+}
+a {
+  color: #fff;
+  text-decoration: none;
+}
+.logo {
+  height: 50px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}

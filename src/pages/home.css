@@ -1,0 +1,194 @@
+.home {
+  width: 100%;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.casestudy1 {
+  background: #f8faff;
+  padding: 60px;
+}
+
+.container {
+  width: 100%;
+  padding: 0 30px;
+}
+
+/* Inquiry Section */
+.inquiry {
+  background: url(../assets/inquiryBG.png) center top/cover no-repeat;
+  padding: 70px 0 70px 0;
+  color: #dde0f4;
+}
+
+.inquiry h2 {
+  color: var(--kl-whiteColor);
+  font-size: 47px;
+  font-weight: 800;
+  text-align: center;
+  margin: 20px 0 3rem;
+}
+
+.meLink a {
+  font-size: 20px;
+  color: var(--kl-whiteColor);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meLink a img {
+  margin-right: 10px;
+  display: inline-block;
+}
+/* Custom Column Responsiveness */
+.custom-col {
+  text-align: center;
+  width: 100%;
+}
+.clientName {
+  text-align: end;
+}
+.custom-colMain a {
+  text-decoration: none;
+}
+
+.caseItem {
+  background: #fff;
+  border-radius: 10px;
+  padding: 50px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+
+.caseItem .icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
+}
+
+.caseItem .icon img {
+  height: auto;
+  width: 100%;
+  filter: brightness(0) saturate(100%) invert(13%) sepia(60%) saturate(4298%) hue-rotate(260deg) brightness(109%)
+    contrast(138%);
+}
+
+.caseItem > h4 {
+  font-size: 20px;
+  line-height: normal;
+  font-weight: 700;
+  color: #2c2850;
+  margin-bottom: 10px;
+}
+
+.caseItem > p {
+  font-size: 15px;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  max-width: 100%;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0px;
+}
+.hoverText {
+  position: absolute;
+  left: 0;
+  top: -100%;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  background: linear-gradient(90deg, rgba(0, 197, 255, 1) 0%, rgba(56, 54, 216, 1) 100%);
+  padding: 30px 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.hoverText > div > h4 {
+  font-size: 20px;
+  line-height: normal;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.hoverText > div > a {
+  color: #fff;
+  font-size: 30px;
+}
+.caseItem:hover .hoverText {
+  top: 0;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.headLink h2 {
+  font-size: 47px;
+  color: #0a1b48;
+  line-height: normal;
+  font-weight: 800;
+}
+@media only screen and (max-width: 575px) {
+  .headLink h2 {
+    font-size: 32px;
+    line-height: normal;
+  }
+  
+  .custom-colMain {
+    flex-direction: column;
+  }
+}
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  
+
+  
+
+  .subHead {
+    line-height: 28px;
+    font-size: 18px;
+  }
+  .caseItem {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .custom-colMain {
+    width: 83.333%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1400px) {
+  .custom-colMain {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
