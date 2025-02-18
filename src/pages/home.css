@@ -14,7 +14,8 @@
   background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
   padding: 4rem 1rem;
   text-align: center;
-  height: 80vh;
+  align-items: center;
+  height: 60vh;
 }
 
 @media (min-width: 768px) {
