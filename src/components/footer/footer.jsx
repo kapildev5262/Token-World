@@ -1,94 +1,54 @@
 import React from "react";
-import "./footer.css";
 import { Link } from "react-router-dom";
-
-import Logo from "../../assets/logo"
-import skype from "../../assets/Icons/skype.svg";
-import phone from "../../assets/Icons/phone.svg";
-import mail from "../../assets/Icons/mil.svg";
-import facebook from "../../assets/Icons/facebook-icon.png";
-import twitter from "../../assets/Icons/twitter.png";
-import instagram from "../../assets/Icons/instagram.png";
-import linkedin from "../../assets/Icons/linkedin-icon.png";
-import pinterest from "../../assets/Icons/pinterest.png";
-import medium from "../../assets/Icons/medium.png";
+import "./footer.css";
+import { Layers} from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        <div className="row">
-          <div className="col-xxl-3 col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12">
-            <div className="fAddress">
-              <Link to={"/"} className="mb-4">
-                <Logo></Logo>
-              </Link>
-              <h4>Quick Contact</h4>
-              <ul>
-                <li>
-                  <span>
-                    <img src={skype} />
-                  </span>
-                  <a href="#/">KDcomapany.Skype</a>
-                </li>
-                <li>
-                  <span>
-                    <img src={phone} />
-                  </span>{" "}
-                  <a href="tel:+919509504256">+91-9509504256</a>
-                </li>
-                <li>
-                  <span>
-                    <img src={mail} />
-                  </span>
-                  <a href="#">kapildev5262@gmail.com</a>
-                </li>
-              </ul>
+        <div className="footer-main">
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <Layers className="footer-logo-icon" />
+              <span className="footer-logo-text">Token World</span>
             </div>
-            <div className="socialMedia">
-              <a href="#" aria-label="Facebook">
-                <img src={facebook} alt="Facebook" />
-              </a>
-              <a href="#" aria-label="Twitter">
-                <img src={twitter} alt="Twitter" />
-              </a>
-              <a href="#" aria-label="Instagram">
-                <img src={instagram} alt="Instagram" />
-              </a>
-              <a href="#" aria-label="LinkedIn">
-                <img src={linkedin} alt="LinkedIn" />
-              </a>
-              <a href="#" aria-label="Pinterest">
-                <img src={pinterest} alt="Pinterest" />
-              </a>
-              <a href="#" aria-label="Medium">
-                <img src={medium} alt="Medium" />
-              </a>
-            </div>
+            <p className="footer-description">
+              No-Code Token Deployment Platform enabling users to deploy ERC-20
+              and ERC-721 tokens without writing smart contracts.
+            </p>
           </div>
 
-          <div className="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-6 col-6">
-            <div className="fLinks">
-              <h4>COMPANY</h4>
-              <ul>
-                <li>
-                  <Link to={"/about-us/"}>About us</Link>
-                </li>
-                <li>
-                  <Link to={"/contact/"}>Contact Us</Link>
-                </li>
-                <li>
-                  <Link to={"/careers/"}>Careers</Link>
-                </li>
-              </ul>
+          <div className="footer-links">
+            <div className="footer-section">
+              <h3>Platform</h3>
+              <Link to="/products">Products</Link>
+              <Link to="/economics">Economics</Link>
+              <Link to="/utilities">Utilities</Link>
+            </div>
+
+            <div className="footer-section">
+              <h3>Resources</h3>
+              <Link to="/developers">Developers</Link>
+              <Link to="/use-cases">Use Cases</Link>
+              <Link to="/community">Community</Link>
+            </div>
+
+            <div className="footer-section">
+              <h3>Support</h3>
+              <Link to="/documentation">Documentation</Link>
+              <Link to="/faq">FAQ</Link>
+              <Link to="/contact">Contact</Link>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="copyRight">
-        <div className="container">
-          <p className="m-0 text-center">© 2024 | KD&Company</p>
+
+        <div className="footer-bottom">
+          <p>&copy; {new Date().getFullYear()} Token World Foundation</p>
+          <div className="footer-legal">
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>

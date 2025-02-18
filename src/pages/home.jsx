@@ -1,117 +1,153 @@
-import React from "react";
-import phone from "../assets/Icons/phonesvg.svg";
-import email from "../assets/Icons/emailsvg.svg";
-
+import { Code, Layers, ArrowRight, BarChart } from "lucide-react";
+import { useWallet } from '../components/wallet/WalletContext';
+import WalletConnector from "../components/wallet/walletConnector";
 import "./home.css";
 
-const Main = () => {
-  
-
+const TokenWorldHomePage = () => {
+  const { account} = useWallet();
   return (
-    <>
-      
-      {/* Case Studies Section */}
-      <section className="casestudy1">
-        <div className="container">
-          <div className="headLink">
-            <h2 className="text-center w-100 mb-4">All Services</h2>
-          </div>
-          <div className="row g-4">
-            <div className="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-              <div className="caseItem">
-                <div className="icon">
-                  <img src="https://cdn-icons-png.flaticon.com/128/4547/4547543.png" />
-                </div>
-                <h4>Coinbaazar</h4>
-                <p>
-                  A Web 3.0 unified P2P Marketplace for buying/selling Bitcoins with 500+ payments, 385+ altcoins,
-                  products and services.
-                </p>
-                <div className="hoverText">
-                  <div>
-                    <h4>Coinbaazar</h4>
-                    <a href="#/">
-                      <i className="fa-solid fa-arrow-right-long"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-              <div className="caseItem">
-                <div className="icon">
-                  <img src="https://cdn-icons-png.flaticon.com/128/4547/4547543.png" />
-                </div>
-                <h4>Fitelo</h4>
-                <p>
-                  Achieve long-term wellness through simple, powerful, and holistic changes in your nutrition and eating
-                  habits
-                </p>
-                <div className="hoverText">
-                  <div>
-                    <h4>Fitelo</h4>
-                    <a href="#/">
-                      <i className="fa-solid fa-arrow-right-long"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-              <div className="caseItem">
-                <div className="icon">
-                  <img src="https://cdn-icons-png.flaticon.com/128/4547/4547543.png" />
-                </div>
-                <h4>MultiPad</h4>
-                <p>
-                  MultiPad is the only multi-chain launchpad that's committed to community, offering reasonable and
-                  guaranteed IDO allocations.
-                </p>
-                <div className="hoverText">
-                  <div>
-                    <h4>MultiPad</h4>
-                    <a href="#/">
-                      <i className="fa-solid fa-arrow-right-long"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 mt-5 text-center">
-            <button className="btn-primary">Read All Stories</button>
+    <div className="token-world-container">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1 className="hero-title">No-Code Token Deployment Platform</h1>
+          <p className="hero-subtitle">
+            Deploy ERC-20 and ERC-721 tokens on your desired blockchain without
+            writing a single line of code.
+          </p>
+          <div className="hero-buttons">
+            <button className="primary-button">Get Started</button>
+            <button className="secondary-button">View Documentation</button>
           </div>
         </div>
       </section>
 
-      {/* Partners Section */}
-      <section className="inquiry">
-        <div className="container">
-          <h2>Have any inquiry?</h2>
+      {/* Features Section */}
+      <section className="features-section">
+        <div className="features-content">
+          <h2 className="section-title">Our Products</h2>
 
-          <div className="custom-colMain">
-            <div className="custom-col">
-              <div className="meLink">
-                <a href="tel:+919509504256">
-                  <img src={phone} className="img-fluid" />
-                  +91-9509504256
-                </a>
+          <div className="feature-cards">
+            {/* ERC-20 Token Deployment */}
+            <div className="feature-card">
+              <div className="feature-icon-container purple">
+                <Code className="feature-icon" />
               </div>
+              <h3 className="feature-title">ERC-20 Token Deployment</h3>
+              <p className="feature-description">
+                Create fungible tokens for your crypto projects without writing
+                or deploying smart contracts.
+              </p>
+              <a href="#" className="feature-link">
+                Get started <ArrowRight className="arrow-icon" />
+              </a>
             </div>
 
-            <div className="custom-col">
-              <div className="meLink">
-                <a href="mailto:kapildev5262@gmail.com">
-                  <img src={email} className="img-fluid" />
-                  kapildev5262@gmail.com
-                </a>
+            {/* ERC-721 Token Deployment */}
+            <div className="feature-card">
+              <div className="feature-icon-container blue">
+                <Layers className="feature-icon" />
               </div>
+              <h3 className="feature-title">ERC-721 Token Deployment</h3>
+              <p className="feature-description">
+                Launch your NFT collection on your preferred blockchain with
+                just a few clicks.
+              </p>
+              <a href="#" className="feature-link">
+                Get started <ArrowRight className="arrow-icon" />
+              </a>
+            </div>
+
+            {/* Multi-account Distribution */}
+            <div className="feature-card">
+              <div className="feature-icon-container green">
+                <BarChart className="feature-icon" />
+              </div>
+              <h3 className="feature-title">Multi-account Distribution</h3>
+              <p className="feature-description">
+                Efficiently distribute tokens to multiple accounts in a single
+                transaction.
+              </p>
+              <a href="#" className="feature-link">
+                Get started <ArrowRight className="arrow-icon" />
+              </a>
             </div>
           </div>
         </div>
       </section>
-    </>
+
+      {/* Benefits Section */}
+      <section className="benefits-section">
+        <div className="benefits-content">
+          <div className="benefits-layout">
+            <div className="benefits-info">
+              <h2 className="section-title-left">Why Choose Token World?</h2>
+              <ul className="benefits-list">
+                <li className="benefit-item">
+                  <div className="benefit-marker">
+                    <div className="benefit-dot"></div>
+                  </div>
+                  <div>
+                    <h4 className="benefit-title">No-Code Solution</h4>
+                    <p className="benefit-description">
+                      Deploy tokens without writing code or smart contracts.
+                    </p>
+                  </div>
+                </li>
+                <li className="benefit-item">
+                  <div className="benefit-marker">
+                    <div className="benefit-dot"></div>
+                  </div>
+                  <div>
+                    <h4 className="benefit-title">Multi-Blockchain Support</h4>
+                    <p className="benefit-description">
+                      Deploy on Ethereum, Polygon, Binance Smart Chain, and
+                      more.
+                    </p>
+                  </div>
+                </li>
+                <li className="benefit-item">
+                  <div className="benefit-marker">
+                    <div className="benefit-dot"></div>
+                  </div>
+                  <div>
+                    <h4 className="benefit-title">Gas Efficient</h4>
+                    <p className="benefit-description">
+                      Optimized contract deployments to save on gas fees.
+                    </p>
+                  </div>
+                </li>
+                <li className="benefit-item">
+                  <div className="benefit-marker">
+                    <div className="benefit-dot"></div>
+                  </div>
+                  <div>
+                    <h4 className="benefit-title">Bulk Distribution</h4>
+                    <p className="benefit-description">
+                      Distribute tokens to thousands of addresses in a single
+                      transaction.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            {!account && (
+            <div className="cta-container">
+              <div className="cta-card">
+                <h3 className="cta-title">Ready to deploy your token?</h3>
+                <p className="cta-description">
+                  Connect your wallet to get started with Token World&apos;s
+                  no-code deployment platform.
+                </p>
+                <WalletConnector />
+              </div>
+            </div>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 
-export default Main;
+export default TokenWorldHomePage;

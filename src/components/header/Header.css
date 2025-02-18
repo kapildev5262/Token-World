@@ -23,12 +23,6 @@
 }
 
 /* Logo Styling */
-.logo {
-  height: 80px !important;
-  padding-top: 25px;
-  white-space: nowrap; /* Prevent logo wrapping */
-}
-
 .header a {
   text-decoration: none;
 }
@@ -37,13 +31,18 @@
 .nav-links {
   list-style: none;
   display: flex;
+  align-items: center; /* Ensures vertical centering */
   margin: 0;
   padding: 0;
 }
 
+
 .nav-links li {
-  margin: 0 10px;
+  display: flex;
+  align-items: center; /* Ensures vertical centering */
+  /* margin: 0 10px; */
 }
+
 
 .reffer {
   line-height: 45px;
@@ -66,12 +65,8 @@
     top: 100%; /* Position below header */
     right: 0;
     background-color: rgba(0, 0, 0, 0.9);
-    padding: 1rem;
+    /* padding: 1rem; */
     display: none; /* Initially hidden */
-  }
-
-  .nav-links li {
-    margin: 10px 0;
   }
 
   /* Show the nav links when menu is open */
@@ -84,4 +79,21 @@
   .menu-toggle {
     display: block;
   }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  height: 2rem;
+  width: 2rem;
+  color: var(--color-primary);
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
 }

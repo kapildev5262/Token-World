@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Link } from "react-router-dom";
+import WalletConnector from "../wallet/walletConnector";
+import { Layers } from "lucide-react";
 import "./Header.css";
-
-import Logo from "../../assets/logo"
-import WalletConnector from "../walletConnector"
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,36 +14,38 @@ const Header = () => {
   return (
     <header className="header">
       <Link to={"/"} className="mb-4">
-        <Logo></Logo>
+        <div className="logo-container">
+          <Layers className="logo-icon" />
+          <span className="logo-text">Token World</span>
+        </div>
       </Link>
-      <button className="menu-toggle" onClick={toggleMenu}>
-        ☰
-      </button>
+
       <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
         <li>
           <a href="#hero" className="reffer">
-            About
+            Products
           </a>
         </li>
         <li>
           <a href="#skills" className="reffer">
-            Skills
+            Economics
           </a>
         </li>
         <li>
           <a href="#experience" className="reffer">
-            Experience
+            Utilities
           </a>
         </li>
         <li>
           <a href="#projects" className="reffer">
-            Projects
+            Support
           </a>
         </li>
-        <li>
-          <WalletConnector></WalletConnector>
-        </li>
       </ul>
+      <WalletConnector/>
+      <button className="menu-toggle" onClick={toggleMenu}>
+        ☰
+      </button>
     </header>
   );
 };
