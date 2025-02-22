@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
     "ethers": "^6.13.5",
     "lucide-react": "^0.475.0",
     "prop-types": "^15.8.1",

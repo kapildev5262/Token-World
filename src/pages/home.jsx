@@ -38,7 +38,7 @@ const TokenWorldHomePage = () => {
                 Create fungible tokens for your crypto projects without writing
                 or deploying smart contracts.
               </p>
-              <a href="#" className="feature-link">
+              <a href="/erc20/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </a>
             </div>
@@ -53,7 +53,7 @@ const TokenWorldHomePage = () => {
                 Launch your NFT collection on your preferred blockchain with
                 just a few clicks.
               </p>
-              <a href="#" className="feature-link">
+              <a href="/erc721/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </a>
             </div>
@@ -68,7 +68,7 @@ const TokenWorldHomePage = () => {
                 Efficiently distribute tokens to multiple accounts in a single
                 transaction.
               </p>
-              <a href="#" className="feature-link">
+              <a href="/distribution/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </a>
             </div>
@@ -132,16 +132,16 @@ const TokenWorldHomePage = () => {
               </ul>
             </div>
             {!account && (
-            <div className="cta-container">
-              <div className="cta-card">
-                <h3 className="cta-title">Ready to deploy your token?</h3>
-                <p className="cta-description">
-                  Connect your wallet to get started with Token World&apos;s
-                  no-code deployment platform.
-                </p>
-                <WalletConnector />
+              <div className="cta-container">
+                <div className="cta-card">
+                  <h3 className="cta-title">Ready to deploy your token?</h3>
+                  <p className="cta-description">
+                    Connect your wallet to get started with Token World&apos;s
+                    no-code deployment platform.
+                  </p>
+                  <WalletConnector />
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>
