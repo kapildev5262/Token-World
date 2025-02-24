@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom";
 import { Code, Layers, ArrowRight, BarChart } from "lucide-react";
-import { useWallet } from '../components/wallet/WalletContext';
+import { useWallet } from "../components/wallet/WalletContext";
 import WalletConnector from "../components/wallet/walletConnector";
 import "./home.css";
 
 const TokenWorldHomePage = () => {
-  const { account} = useWallet();
+  const { account } = useWallet();
   return (
     <div className="token-world-container">
       {/* Hero Section */}
@@ -38,9 +39,9 @@ const TokenWorldHomePage = () => {
                 Create fungible tokens for your crypto projects without writing
                 or deploying smart contracts.
               </p>
-              <a href="/erc20/" className="feature-link">
+              <Link to="/erc20/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
-              </a>
+              </Link>
             </div>
 
             {/* ERC-721 Token Deployment */}
