@@ -108,7 +108,7 @@ const ERC20FactoryUI = () => {
         setError("");
       } catch (err) {
         console.error("Error initializing contract:", err);
-        setError(`Failed to initialize contract: ${err.message}`);
+        // setError(`Failed to initialize contract: ${err.message}`);
       }
     };
 
