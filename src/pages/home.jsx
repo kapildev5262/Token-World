@@ -44,9 +44,9 @@ const TokenWorldHomePage = () => {
               </div>
               <h3 className="feature-title">ERC-721 Token Deployment</h3>
               <p className="feature-description">Launch your NFT collection on your preferred blockchain with just a few clicks.</p>
-              <a href="/erc721/" className="feature-link">
+              <Link to="/erc721/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
-              </a>
+              </Link>
             </div>
 
             {/* Multi-account Distribution */}
@@ -56,9 +56,9 @@ const TokenWorldHomePage = () => {
               </div>
               <h3 className="feature-title">Multi-account Distribution</h3>
               <p className="feature-description">Efficiently distribute tokens to multiple accounts in a single transaction.</p>
-              <a href="/distribution/" className="feature-link">
+              <Link to="/distribution/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
