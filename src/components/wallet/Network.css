@@ -1,0 +1,76 @@
+/* Network.css */
+.blockchain-selector {
+    margin-bottom: 24px;
+    border-radius: 8px;
+    background-color: #f5f7ff;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tab-container {
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+  }
+  
+  .tab-button {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-button.active {
+    color: #3366ff;
+    font-weight: 600;
+    border-bottom: 2px solid #3366ff;
+  }
+  
+  .blockchain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  
+  .blockchain-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .blockchain-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #ccc;
+  }
+  
+  .blockchain-item.selected {
+    border-color: #3366ff;
+    box-shadow: 0 0 0 2px rgba(51, 102, 255, 0.2);
+    background-color: #f0f5ff;
+  }
+  
+  .blockchain-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .blockchain-name {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    color: #333;
+  }

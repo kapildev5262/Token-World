@@ -1,49 +1,59 @@
-// WalletContext.js
-import { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+// WalletContext.jsx
+import  { createContext, useContext, useState } from 'react';
 
-const WalletContext = createContext();
 
-export function WalletProvider({ children }) {
-  const [account, setAccount] = useState(null);
+const WalletContext = createContext(null);
+
+export const WalletProvider = ({ children }) => {
+  const [account, setAccount] = useState("");
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [selectedChain, setSelectedChain] = useState(null);
 
-  const updateWalletState = (newAccount, newSigner, newProvider) => {
-    setAccount(newAccount);
+  const updateWalletState = (address, newSigner, newProvider) => {
+    setAccount(address);
     setSigner(newSigner);
     setProvider(newProvider);
   };
 
   const clearWalletState = () => {
-    setAccount(null);
+    setAccount("");
     setSigner(null);
     setProvider(null);
   };
 
+  const updateSelectedChain = (chain) => {
+    setSelectedChain(chain);
+  };
+
   return (
     <WalletContext.Provider 
-      value={{
-        account,
-        signer,
-        provider,
-        updateWalletState,
-        clearWalletState
+      value={{ 
+        account, 
+        signer, 
+        provider, 
+        selectedChain,
+        updateWalletState, 
+        clearWalletState,
+        updateSelectedChain
       }}
     >
       {children}
     </WalletContext.Provider>
   );
-}
+};
+
+export const useWallet = () => useContext(WalletContext);
 
 WalletProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export function useWallet() {
-  const context = useContext(WalletContext);
-  if (context === undefined) {
-    throw new Error('useWallet must be used within a WalletProvider');
-  }
-  return context;
-}
+// export function useWallet() {
+//   const context = useContext(WalletContext);
+//   if (context === undefined) {
+//     throw new Error('useWallet must be used within a WalletProvider');
+//   }
+//   return context;
+// }

@@ -236,11 +236,7 @@
     width: 50%;
   }
 
-  .cta-container {
-    width: 50%;
-    display: flex;
-    justify-content: center;
-  }
+  
 }
 
 .section-title-left {
@@ -290,30 +286,7 @@
   line-height: 1.5;
 }
 
-.cta-card {
-  background-color: var(--color-white);
-  border-radius: 0.5rem;
-  padding: 2rem;
-  max-width: 24rem;
-  width: 100%;
 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.cta-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: var(--color-text);
-}
-
-.cta-description {
-  color: var(--color-text-light);
-  margin-bottom: 2rem;
-  text-align: center;
-  line-height: 1.5;
-}
 
 .cta-button {
   width: 100%;

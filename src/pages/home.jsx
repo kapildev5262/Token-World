@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { Code, Layers, ArrowRight, BarChart } from "lucide-react";
+import {Code, Layers, ArrowRight, BarChart } from "lucide-react";
 import { useWallet } from "../components/wallet/WalletContext";
-import WalletConnector from "../components/wallet/walletConnector";
 import "./home.css";
 
 const TokenWorldHomePage = () => {
@@ -12,10 +11,7 @@ const TokenWorldHomePage = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">No-Code Token Deployment Platform</h1>
-          <p className="hero-subtitle">
-            Deploy ERC-20 and ERC-721 tokens on your desired blockchain without
-            writing a single line of code.
-          </p>
+          <p className="hero-subtitle">Deploy ERC-20 and ERC-721 tokens on your desired blockchain without writing a single line of code.</p>
           <div className="hero-buttons">
             <button className="primary-button">Get Started</button>
             <button className="secondary-button">View Documentation</button>
@@ -35,10 +31,7 @@ const TokenWorldHomePage = () => {
                 <Code className="feature-icon" />
               </div>
               <h3 className="feature-title">ERC-20 Token Deployment</h3>
-              <p className="feature-description">
-                Create fungible tokens for your crypto projects without writing
-                or deploying smart contracts.
-              </p>
+              <p className="feature-description">Create fungible tokens for your crypto projects without writing or deploying smart contracts.</p>
               <Link to="/erc20/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </Link>
@@ -50,10 +43,7 @@ const TokenWorldHomePage = () => {
                 <Layers className="feature-icon" />
               </div>
               <h3 className="feature-title">ERC-721 Token Deployment</h3>
-              <p className="feature-description">
-                Launch your NFT collection on your preferred blockchain with
-                just a few clicks.
-              </p>
+              <p className="feature-description">Launch your NFT collection on your preferred blockchain with just a few clicks.</p>
               <a href="/erc721/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </a>
@@ -65,10 +55,7 @@ const TokenWorldHomePage = () => {
                 <BarChart className="feature-icon" />
               </div>
               <h3 className="feature-title">Multi-account Distribution</h3>
-              <p className="feature-description">
-                Efficiently distribute tokens to multiple accounts in a single
-                transaction.
-              </p>
+              <p className="feature-description">Efficiently distribute tokens to multiple accounts in a single transaction.</p>
               <a href="/distribution/" className="feature-link">
                 Get started <ArrowRight className="arrow-icon" />
               </a>
@@ -90,9 +77,7 @@ const TokenWorldHomePage = () => {
                   </div>
                   <div>
                     <h4 className="benefit-title">No-Code Solution</h4>
-                    <p className="benefit-description">
-                      Deploy tokens without writing code or smart contracts.
-                    </p>
+                    <p className="benefit-description">Deploy tokens without writing code or smart contracts.</p>
                   </div>
                 </li>
                 <li className="benefit-item">
@@ -101,10 +86,7 @@ const TokenWorldHomePage = () => {
                   </div>
                   <div>
                     <h4 className="benefit-title">Multi-Blockchain Support</h4>
-                    <p className="benefit-description">
-                      Deploy on Ethereum, Polygon, Binance Smart Chain, and
-                      more.
-                    </p>
+                    <p className="benefit-description">Deploy on Ethereum, Polygon, Binance Smart Chain, and more.</p>
                   </div>
                 </li>
                 <li className="benefit-item">
@@ -113,9 +95,7 @@ const TokenWorldHomePage = () => {
                   </div>
                   <div>
                     <h4 className="benefit-title">Gas Efficient</h4>
-                    <p className="benefit-description">
-                      Optimized contract deployments to save on gas fees.
-                    </p>
+                    <p className="benefit-description">Optimized contract deployments to save on gas fees.</p>
                   </div>
                 </li>
                 <li className="benefit-item">
@@ -124,24 +104,16 @@ const TokenWorldHomePage = () => {
                   </div>
                   <div>
                     <h4 className="benefit-title">Bulk Distribution</h4>
-                    <p className="benefit-description">
-                      Distribute tokens to thousands of addresses in a single
-                      transaction.
-                    </p>
+                    <p className="benefit-description">Distribute tokens to thousands of addresses in a single transaction.</p>
                   </div>
                 </li>
               </ul>
             </div>
             {!account && (
-              <div className="cta-container">
-                <div className="cta-card">
-                  <h3 className="cta-title">Ready to deploy your token?</h3>
-                  <p className="cta-description">
-                    Connect your wallet to get started with Token World&apos;s
-                    no-code deployment platform.
-                  </p>
-                  <WalletConnector />
-                </div>
+              <div>
+                <h3>Ready to deploy your token?</h3>
+                <p>Connect your wallet to get started with Token World&apos;s no-code deployment platform.</p>
+                {/* <Wallet onClick={setPopupOpen(true)} /> */}
               </div>
             )}
           </div>

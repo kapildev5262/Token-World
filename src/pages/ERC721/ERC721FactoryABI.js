@@ -1,124 +1,62 @@
-export const ERC20FactoryABI = [
+export const ERC721FactoryABI = [
   {
     inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
   },
   {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "decimals",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "maxDecimals",
-        type: "uint8",
-      },
-    ],
-    name: "DecimalsTooHigh",
+    inputs: [],
+    name: "BatchSizeTooLarge",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requested",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "available",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
     name: "InsufficientBalance",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "provided",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "required",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
     name: "InsufficientFee",
     type: "error",
   },
   {
     inputs: [],
-    name: "InvalidInitialSupply",
+    name: "InvalidBaseURILength",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "length",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxLength",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
     name: "InvalidNameLength",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "length",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxLength",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
+    name: "InvalidQuantity",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "InvalidSymbolLength",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-    ],
+    inputs: [],
     name: "InvalidToken",
     type: "error",
   },
   {
     inputs: [],
-    name: "MintFailed",
+    name: "InvalidTokenAddress",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "caller",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "creator",
-        type: "address",
-      },
-    ],
+    inputs: [],
     name: "NotAuthorized",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "RoyaltyFeeTooHigh",
     type: "error",
   },
   {
@@ -137,9 +75,23 @@ export const ERC20FactoryABI = [
     type: "error",
   },
   {
-    inputs: [],
-    name: "ZeroAmount",
-    type: "error",
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "minter",
+        type: "address",
+      },
+    ],
+    name: "AuthorizedMinterAdded",
+    type: "event",
   },
   {
     anonymous: false,
@@ -164,31 +116,6 @@ export const ERC20FactoryABI = [
       },
     ],
     name: "EmergencyTokenRecovery",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "smallTier",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "mediumTier",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "largeTier",
-        type: "uint256",
-      },
-    ],
-    name: "FeeTierChanged",
     type: "event",
   },
   {
@@ -278,14 +205,8 @@ export const ERC20FactoryABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "initialSupply",
+        name: "initialMintSize",
         type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint8",
-        name: "decimals",
-        type: "uint8",
       },
       {
         indexed: false,
@@ -303,7 +224,7 @@ export const ERC20FactoryABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "token",
+        name: "tokenAddress",
         type: "address",
       },
       {
@@ -315,14 +236,8 @@ export const ERC20FactoryABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "amount",
+        name: "quantity",
         type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "minter",
-        type: "address",
       },
     ],
     name: "TokenMinted",
@@ -341,19 +256,24 @@ export const ERC20FactoryABI = [
         type: "string",
       },
       {
-        internalType: "uint256",
-        name: "initialSupply",
-        type: "uint256",
+        internalType: "string",
+        name: "baseURI",
+        type: "string",
       },
       {
-        internalType: "uint8",
-        name: "decimals",
-        type: "uint8",
+        internalType: "uint256",
+        name: "initialMintSize",
+        type: "uint256",
       },
       {
         internalType: "bool",
         name: "isMintable",
         type: "bool",
+      },
+      {
+        internalType: "uint96",
+        name: "royaltyFee",
+        type: "uint96",
       },
     ],
     name: "deployToken",
@@ -436,7 +356,7 @@ export const ERC20FactoryABI = [
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "quantity",
         type: "uint256",
       },
     ],
@@ -536,9 +456,5 @@ export const ERC20FactoryABI = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

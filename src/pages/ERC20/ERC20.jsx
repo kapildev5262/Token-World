@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { contractAddress, ERC20FactoryABI } from "./ERC20FactoryABI";
+import { ERC20FactoryABI } from "./ERC20FactoryABI";
 import { ERC20ABI } from "./ERC20ABI";
 import { MintableERC20ABI } from "./MintableERC20ABI";
 import "./erc20.css";
@@ -9,7 +9,8 @@ import { useWallet } from "../../components/wallet/WalletContext";
 import WalletConnector from "../../components/wallet/walletConnector";
 
 const ERC20FactoryUI = () => {
-  const { account, signer, provider } = useWallet();
+  const { account, signer, selectedChain } = useWallet();
+  const contractAddress = selectedChain?.ERC20factoryAddress;
 
   // State variables
   const [contract, setContract] = useState(null);
@@ -46,6 +47,7 @@ const ERC20FactoryUI = () => {
     isFactoryCreated: false,
     isMintable: false,
     isCreator: false,
+    mintFee: "0",
   });
 
   // Withdrawal state
@@ -72,11 +74,7 @@ const ERC20FactoryUI = () => {
 
       try {
         // Initialize the contract with connected signer
-        const factoryContract = new ethers.Contract(
-          contractAddress,
-          ERC20FactoryABI,
-          signer
-        );
+        const factoryContract = new ethers.Contract(contractAddress, ERC20FactoryABI, signer);
         setContract(factoryContract);
 
         // Check if the connected account is the owner
@@ -113,7 +111,7 @@ const ERC20FactoryUI = () => {
     };
 
     initializeContract();
-  }, [signer, account]);
+  }, [signer, account, contractAddress]);
 
   // Calculate fee based on initial supply
   const calculateFee = () => {
@@ -136,10 +134,34 @@ const ERC20FactoryUI = () => {
     return fee;
   };
 
+  const calculateMintFee = () => {
+    if (!tokenOpsForm.amount || isNaN(tokenOpsForm.amount)) {
+      return "0";
+    }
+
+    const mintsupply = parseInt(tokenOpsForm.amount);
+    let mintFee;
+
+    if (mintsupply < 1000) {
+      mintFee = currentFees.small;
+    } else if (mintsupply < 10000) {
+      mintFee = currentFees.medium;
+    } else {
+      mintFee = currentFees.large;
+    }
+
+    setTokenOpsForm((prev) => ({ ...prev, mintFee }));
+    return mintFee;
+  };
+
   // Update fee when token supply or fee structure changes
   useEffect(() => {
     calculateFee();
   }, [tokenForm.initialSupply, currentFees]);
+
+  useEffect(() => {
+    calculateMintFee();
+  }, [tokenOpsForm.amount, currentFees]);
 
   // Deploy token
   const deployToken = async (e) => {
@@ -176,39 +198,32 @@ const ERC20FactoryUI = () => {
 
       const feeAmount = ethers.parseEther(tokenForm.fee);
 
-      const tx = await contract.deployToken(
-        tokenForm.name,
-        tokenForm.symbol,
-        tokenForm.initialSupply,
-        tokenForm.decimals,
-        tokenForm.isMintable,
-        { value: feeAmount }
-      );
+      const tx = await contract.deployToken(tokenForm.name, tokenForm.symbol, tokenForm.initialSupply, tokenForm.decimals, tokenForm.isMintable, { value: feeAmount });
 
       setSuccess("Deploying token, please wait for confirmation...");
 
       const receipt = await tx.wait();
       const tokenCreatedEvent = receipt.logs
-        .map((log) => {
+        .filter((log) => {
           try {
-            return contract.interface.parseLog(log);
+            const parsedLog = contract.interface.parseLog({
+              topics: log.topics,
+              data: log.data,
+            });
+            return parsedLog.name === "TokenDeployed";
           } catch (e) {
-            return null;
+            return false;
           }
         })
-        .find((event) => event?.name === "TokenDeployed");
+        .map((log) =>
+          contract.interface.parseLog({
+            topics: log.topics,
+            data: log.data,
+          })
+        )[0];
 
       if (tokenCreatedEvent) {
-        const [
-          tokenAddress,
-          ,
-          name,
-          symbol,
-          initialSupply,
-          decimals,
-          ,
-          isMintable,
-        ] = tokenCreatedEvent.args;
+        const [tokenAddress, creator, name, symbol, initialSupply, decimals, , isMintable] = tokenCreatedEvent.args;
 
         // Add to deployed tokens list
         setDeployedTokens((prev) => [
@@ -220,6 +235,7 @@ const ERC20FactoryUI = () => {
             initialSupply: initialSupply,
             decimals: decimals,
             isMintable: isMintable,
+            creator: creator,
           },
         ]);
 
@@ -243,12 +259,7 @@ const ERC20FactoryUI = () => {
   };
 
   const validateTokenForMinting = async (tokenAddress, account, contract) => {
-    if (
-      !tokenAddress ||
-      !ethers.isAddress(tokenAddress) ||
-      !contract ||
-      !account
-    ) {
+    if (!tokenAddress || !ethers.isAddress(tokenAddress) || !contract || !account) {
       return {
         isValid: false,
         message: "Please enter a valid token address",
@@ -277,15 +288,10 @@ const ERC20FactoryUI = () => {
 
       // Check if token is mintable
       try {
-        const tokenContract = new ethers.Contract(
-          tokenAddress,
-          MintableERC20ABI,
-          contract.runner
-        );
+        const tokenContract = new ethers.Contract(tokenAddress, MintableERC20ABI, contract.runner);
 
         // This will throw if function doesn't exist
-        const mintFunctionFragment =
-          tokenContract.interface.getFunction("mint");
+        const mintFunctionFragment = tokenContract.interface.getFunction("mint");
 
         if (!mintFunctionFragment) {
           return {
@@ -325,11 +331,7 @@ const ERC20FactoryUI = () => {
         return;
       }
 
-      if (
-        !tokenOpsForm.tokenAddress ||
-        !tokenOpsForm.recipient ||
-        !tokenOpsForm.amount
-      ) {
+      if (!tokenOpsForm.tokenAddress || !tokenOpsForm.recipient || !tokenOpsForm.amount) {
         setError("All fields are required");
         return;
       }
@@ -345,34 +347,24 @@ const ERC20FactoryUI = () => {
       }
 
       // Validate token before attempting to mint
-      const validation = await validateTokenForMinting(
-        tokenOpsForm.tokenAddress,
-        account,
-        contract
-      );
+      const validation = await validateTokenForMinting(tokenOpsForm.tokenAddress, account, contract);
 
       if (!validation.isValid) {
         setError(validation.message);
         return;
       }
 
-      // Get token contract to get decimals
-      const tokenContract = new ethers.Contract(
-        tokenOpsForm.tokenAddress,
-        MintableERC20ABI,
-        signer
-      );
-
       try {
-        const decimals = await tokenContract.decimals();
-        const parsedAmount = ethers.parseUnits(tokenOpsForm.amount, decimals);
+        // Calculate fee based on the non-decimal adjusted amount
+        const feeAmount = ethers.parseEther(tokenOpsForm.mintFee);
 
+        // Send the transaction with the correct fee
         setSuccess("Preparing to mint tokens...");
-
         const tx = await contract.mintToken(
           tokenOpsForm.tokenAddress,
           tokenOpsForm.recipient,
-          parsedAmount
+          parseInt(tokenOpsForm.amount), // THIS IS KEY: use the non-decimal adjusted amount
+          { value: feeAmount }
         );
 
         setSuccess("Minting tokens, please wait for confirmation...");
@@ -381,23 +373,28 @@ const ERC20FactoryUI = () => {
 
         // Look for TokenMinted event
         const tokenMintedEvent = receipt.logs
-          .map((log) => {
+          .filter((log) => {
             try {
-              return contract.interface.parseLog(log);
+              const parsedLog = contract.interface.parseLog({
+                topics: log.topics,
+                data: log.data,
+              });
+              return parsedLog.name === "TokenMinted";
             } catch (e) {
-              return null;
+              return false;
             }
           })
-          .find((event) => event?.name === "TokenMinted");
+          .map((log) =>
+            contract.interface.parseLog({
+              topics: log.topics,
+              data: log.data,
+            })
+          )[0];
 
         if (tokenMintedEvent) {
-          setSuccess(
-            `Successfully minted ${tokenOpsForm.amount} tokens to ${tokenOpsForm.recipient}`
-          );
+          setSuccess(`Successfully minted ${tokenOpsForm.amount} tokens to ${tokenOpsForm.recipient}`);
         } else {
-          setSuccess(
-            `Transaction confirmed, but no minting event found. Please verify the balance.`
-          );
+          setSuccess(`Transaction confirmed, but no minting event found. Please verify the balance.`);
         }
 
         // Reset form fields
@@ -437,11 +434,7 @@ const ERC20FactoryUI = () => {
         return;
       }
 
-      if (
-        !feeForm.smallTierFee ||
-        !feeForm.mediumTierFee ||
-        !feeForm.largeTierFee
-      ) {
+      if (!feeForm.smallTierFee || !feeForm.mediumTierFee || !feeForm.largeTierFee) {
         setError("All fee fields are required");
         return;
       }
@@ -486,9 +479,7 @@ const ERC20FactoryUI = () => {
         return;
       }
 
-      const amount = withdrawalAmount
-        ? ethers.parseEther(withdrawalAmount)
-        : ethers.BigNumber.from("0");
+      const amount = withdrawalAmount ? ethers.parseEther(withdrawalAmount) : ethers.BigNumber.from("0");
 
       const tx = await contract.withdrawFees(amount);
 
@@ -500,9 +491,7 @@ const ERC20FactoryUI = () => {
       const newBalance = await contract.getContractBalance();
       setFactoryBalance(ethers.formatEther(newBalance));
 
-      setSuccess(
-        `Successfully withdrew ${withdrawalAmount || factoryBalance} ETH`
-      );
+      setSuccess(`Successfully withdrew ${withdrawalAmount || factoryBalance} ETH`);
       setWithdrawalAmount("");
     } catch (err) {
       setError(`Failed to withdraw fees: ${err.message}`);
@@ -526,11 +515,7 @@ const ERC20FactoryUI = () => {
         return;
       }
 
-      if (
-        !recoveryForm.tokenAddress ||
-        !recoveryForm.recipient ||
-        !recoveryForm.amount
-      ) {
+      if (!recoveryForm.tokenAddress || !recoveryForm.recipient || !recoveryForm.amount) {
         setError("All fields are required");
         return;
       }
@@ -546,27 +531,17 @@ const ERC20FactoryUI = () => {
       }
 
       // Get token decimals
-      const tokenContract = new ethers.Contract(
-        recoveryForm.tokenAddress,
-        ERC20ABI,
-        signer
-      );
+      const tokenContract = new ethers.Contract(recoveryForm.tokenAddress, ERC20ABI, signer);
 
       const decimals = await tokenContract.decimals();
       const parsedAmount = ethers.parseUnits(recoveryForm.amount, decimals);
 
-      const tx = await contract.recoverERC20(
-        recoveryForm.tokenAddress,
-        recoveryForm.recipient,
-        parsedAmount
-      );
+      const tx = await contract.recoverERC20(recoveryForm.tokenAddress, recoveryForm.recipient, parsedAmount);
 
       setSuccess("Recovering tokens, please wait for confirmation...");
 
       await tx.wait();
-      setSuccess(
-        `Successfully recovered ${recoveryForm.amount} tokens to ${recoveryForm.recipient}`
-      );
+      setSuccess(`Successfully recovered ${recoveryForm.amount} tokens to ${recoveryForm.recipient}`);
 
       // Reset form fields
       setRecoveryForm({
@@ -616,26 +591,18 @@ const ERC20FactoryUI = () => {
   };
 
   return (
-    <div className="erc20-factory-container">
-      <header className="erc20-header">
+    <div className="factory-container">
+      <header className="factory-header">
         <h1>ERC20 Token Factory</h1>
         <div className="connection-info">
           {!account && (
-            <div className="cta-container">
-              <div className="cta-card">
-                <h3 className="cta-title">Ready to deploy your token?</h3>
-                <p className="cta-description">
-                  Connect your wallet and start minting ERC-20 Token
-                </p>
-                <WalletConnector />
-              </div>
+            <div>
+              <h3>Ready to deploy your token?</h3>
+              <p>Connect your wallet and start minting ERC-20 Token</p>
+              <WalletConnector />
             </div>
           )}
-          {account && (
-            <div className="account-info">
-              {isOwner && <span className="owner-badge">Owner</span>}
-            </div>
-          )}
+          {account && <div className="account-info">{isOwner && <span className="owner-badge">Owner</span>}</div>}
         </div>
       </header>
 
@@ -647,6 +614,7 @@ const ERC20FactoryUI = () => {
 
         {isOwner && (
           <div className="contract-info">
+            <p>Connected to:{contractAddress}</p>
             <div className="fee-info">
               <p>Current Fees:</p>
               <ul>
@@ -675,65 +643,27 @@ const ERC20FactoryUI = () => {
             <form onSubmit={deployToken}>
               <div className="form-group">
                 <label>Token Name (max 32 chars):</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={tokenForm.name}
-                  onChange={handleTokenFormChange}
-                  placeholder="e.g., My Cool Token"
-                  maxLength={32}
-                  required
-                />
+                <input type="text" name="name" value={tokenForm.name} onChange={handleTokenFormChange} placeholder="e.g., My Cool Token" maxLength={32} required />
               </div>
 
               <div className="form-group">
                 <label>Token Symbol (max 8 chars):</label>
-                <input
-                  type="text"
-                  name="symbol"
-                  value={tokenForm.symbol}
-                  onChange={handleTokenFormChange}
-                  placeholder="e.g., MCT"
-                  maxLength={8}
-                  required
-                />
+                <input type="text" name="symbol" value={tokenForm.symbol} onChange={handleTokenFormChange} placeholder="e.g., MCT" maxLength={8} required />
               </div>
 
               <div className="form-group">
                 <label>Initial Supply (whole tokens):</label>
-                <input
-                  type="number"
-                  name="initialSupply"
-                  value={tokenForm.initialSupply}
-                  onChange={handleTokenFormChange}
-                  placeholder="e.g., 1000000"
-                  min="1"
-                  required
-                />
+                <input type="number" name="initialSupply" value={tokenForm.initialSupply} onChange={handleTokenFormChange} placeholder="e.g., 1000000" min="1" required />
               </div>
 
               <div className="form-group">
                 <label>Decimals (max 18):</label>
-                <input
-                  type="number"
-                  name="decimals"
-                  value={tokenForm.decimals}
-                  onChange={handleTokenFormChange}
-                  placeholder="e.g., 18"
-                  min="0"
-                  max="18"
-                  required
-                />
+                <input type="number" name="decimals" value={tokenForm.decimals} onChange={handleTokenFormChange} placeholder="e.g., 18" min="0" max="18" required />
               </div>
 
               <div className="form-group checkbox">
                 <label>
-                  <input
-                    type="checkbox"
-                    name="isMintable"
-                    checked={tokenForm.isMintable}
-                    onChange={handleTokenFormChange}
-                  />
+                  <input type="checkbox" name="isMintable" checked={tokenForm.isMintable} onChange={handleTokenFormChange} />
                   Make Token Mintable
                 </label>
               </div>
@@ -746,69 +676,40 @@ const ERC20FactoryUI = () => {
 
           <div className="section">
             <h2>Mint Additional Tokens</h2>
-            <p className="section-info">
-              For factory-created mintable tokens only. You must be the token
-              creator.
-            </p>
+            <p className="section-info">For factory-created mintable tokens only. You must be the token creator.</p>
             <form onSubmit={mintTokens}>
               <div className="form-group">
                 <label>Token Address:</label>
-                <input
-                  type="text"
-                  name="tokenAddress"
-                  value={tokenOpsForm.tokenAddress}
-                  onChange={handleTokenOpsFormChange}
-                  placeholder="0x..."
-                  required
-                />
+                <input type="text" name="tokenAddress" value={tokenOpsForm.tokenAddress} onChange={handleTokenOpsFormChange} placeholder="0x..." required />
               </div>
 
-              {tokenOpsForm.tokenAddress &&
-                ethers.isAddress(tokenOpsForm.tokenAddress) && (
-                  <div className="token-validation-status">
-                    <button
-                      type="button"
-                      className="validate-btn"
-                      onClick={async () => {
-                        const validation = await validateTokenForMinting(
-                          tokenOpsForm.tokenAddress,
-                          account,
-                          contract
-                        );
-                        if (validation.isValid) {
-                          setSuccess(validation.message);
-                        } else {
-                          setError(validation.message);
-                        }
-                      }}
-                    >
-                      Validate Token
-                    </button>
-                  </div>
-                )}
+              {tokenOpsForm.tokenAddress && ethers.isAddress(tokenOpsForm.tokenAddress) && (
+                <div className="token-validation-status">
+                  <button
+                    type="button"
+                    className="validate-btn"
+                    onClick={async () => {
+                      const validation = await validateTokenForMinting(tokenOpsForm.tokenAddress, account, contract);
+                      if (validation.isValid) {
+                        setSuccess(validation.message);
+                      } else {
+                        setError(validation.message);
+                      }
+                    }}
+                  >
+                    Validate Token
+                  </button>
+                </div>
+              )}
 
               <div className="form-group">
                 <label>Recipient Address:</label>
-                <input
-                  type="text"
-                  name="recipient"
-                  value={tokenOpsForm.recipient}
-                  onChange={handleTokenOpsFormChange}
-                  placeholder="0x..."
-                  required
-                />
+                <input type="text" name="recipient" value={tokenOpsForm.recipient} onChange={handleTokenOpsFormChange} placeholder="0x..." required />
               </div>
 
               <div className="form-group">
                 <label>Amount to Mint:</label>
-                <input
-                  type="text"
-                  name="amount"
-                  value={tokenOpsForm.amount}
-                  onChange={handleTokenOpsFormChange}
-                  placeholder="e.g., 1000"
-                  required
-                />
+                <input type="text" name="amount" value={tokenOpsForm.amount} onChange={handleTokenOpsFormChange} placeholder="e.g., 1000" required />
               </div>
 
               <button type="submit" className="mint-btn">
@@ -824,38 +725,17 @@ const ERC20FactoryUI = () => {
                 <form onSubmit={updateFees}>
                   <div className="form-group">
                     <label>Small Tier Fee (ETH):</label>
-                    <input
-                      type="text"
-                      name="smallTierFee"
-                      value={feeForm.smallTierFee}
-                      onChange={handleFeeFormChange}
-                      placeholder={currentFees.small}
-                      required
-                    />
+                    <input type="text" name="smallTierFee" value={feeForm.smallTierFee} onChange={handleFeeFormChange} placeholder={currentFees.small} required />
                   </div>
 
                   <div className="form-group">
                     <label>Medium Tier Fee (ETH):</label>
-                    <input
-                      type="text"
-                      name="mediumTierFee"
-                      value={feeForm.mediumTierFee}
-                      onChange={handleFeeFormChange}
-                      placeholder={currentFees.medium}
-                      required
-                    />
+                    <input type="text" name="mediumTierFee" value={feeForm.mediumTierFee} onChange={handleFeeFormChange} placeholder={currentFees.medium} required />
                   </div>
 
                   <div className="form-group">
                     <label>Large Tier Fee (ETH):</label>
-                    <input
-                      type="text"
-                      name="largeTierFee"
-                      value={feeForm.largeTierFee}
-                      onChange={handleFeeFormChange}
-                      placeholder={currentFees.large}
-                      required
-                    />
+                    <input type="text" name="largeTierFee" value={feeForm.largeTierFee} onChange={handleFeeFormChange} placeholder={currentFees.large} required />
                   </div>
 
                   <button type="submit" className="update-btn">
@@ -866,18 +746,11 @@ const ERC20FactoryUI = () => {
 
               <div className="section">
                 <h2>Withdraw Fees (Owner Only)</h2>
-                <p className="section-info">
-                  Current contract balance: {factoryBalance} ETH
-                </p>
+                <p className="section-info">Current contract balance: {factoryBalance} ETH</p>
                 <form onSubmit={withdrawFees}>
                   <div className="form-group">
                     <label>Amount to Withdraw (ETH):</label>
-                    <input
-                      type="text"
-                      value={withdrawalAmount}
-                      onChange={(e) => setWithdrawalAmount(e.target.value)}
-                      placeholder="Leave empty to withdraw all"
-                    />
+                    <input type="text" value={withdrawalAmount} onChange={(e) => setWithdrawalAmount(e.target.value)} placeholder="Leave empty to withdraw all" />
                   </div>
 
                   <button type="submit" className="withdraw-btn">
@@ -888,45 +761,21 @@ const ERC20FactoryUI = () => {
 
               <div className="section">
                 <h2>Recover ERC20 Tokens (Owner Only)</h2>
-                <p className="section-info">
-                  Emergency function to recover tokens accidentally sent to the
-                  contract.
-                </p>
+                <p className="section-info">Emergency function to recover tokens accidentally sent to the contract.</p>
                 <form onSubmit={recoverTokens}>
                   <div className="form-group">
                     <label>Token Address:</label>
-                    <input
-                      type="text"
-                      name="tokenAddress"
-                      value={recoveryForm.tokenAddress}
-                      onChange={handleRecoveryFormChange}
-                      placeholder="0x..."
-                      required
-                    />
+                    <input type="text" name="tokenAddress" value={recoveryForm.tokenAddress} onChange={handleRecoveryFormChange} placeholder="0x..." required />
                   </div>
 
                   <div className="form-group">
                     <label>Recipient Address:</label>
-                    <input
-                      type="text"
-                      name="recipient"
-                      value={recoveryForm.recipient}
-                      onChange={handleRecoveryFormChange}
-                      placeholder="0x..."
-                      required
-                    />
+                    <input type="text" name="recipient" value={recoveryForm.recipient} onChange={handleRecoveryFormChange} placeholder="0x..." required />
                   </div>
 
                   <div className="form-group">
                     <label>Amount to Recover:</label>
-                    <input
-                      type="text"
-                      name="amount"
-                      value={recoveryForm.amount}
-                      onChange={handleRecoveryFormChange}
-                      placeholder="e.g., 1000"
-                      required
-                    />
+                    <input type="text" name="amount" value={recoveryForm.amount} onChange={handleRecoveryFormChange} placeholder="e.g., 1000" required />
                   </div>
 
                   <button type="submit" className="recover-btn">
